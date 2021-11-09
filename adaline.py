@@ -28,12 +28,6 @@ class Adaline:
                 cnt += 1
                 net_inputs = self.net_input(xi)
                 update = target - net_inputs
-                try:
-                    self.w += self.lr * xi * update
-                except FloatingPointError:
-                    print(f"target: {target}")
-                    print(f"ni: {net_inputs}")
-                    print(f"update: {update}")
-                    exit()
+                self.w += self.lr * xi * update
                 self.b += self.lr * update.sum()
                 
