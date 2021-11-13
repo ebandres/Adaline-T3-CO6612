@@ -114,3 +114,6 @@ dmypy.json
 .pyre/
 *.csv
 iris.py
+*.png
+*.pdf
+*.zip

@@ -41,6 +41,16 @@ def train_test_split(data, test_ratio, target):
 
     return numpy.array(xtrain), numpy.array(xtest), numpy.array(ytrain), numpy.array(ytest)
 
+def mse(target, predicted):
+    # Devuelve el error cuadratico medio
+    #if len(target) != len(predicted): raise ValueError("List sizes don't match")
+
+    mse = 0
+    for i in range(len(predicted)):
+        mse += (target[i] - predicted[i])**2
+    return mse / len(target)
+    
+
 if __name__ == "__main__":
     # testing
     l = readfile('iris.csv')

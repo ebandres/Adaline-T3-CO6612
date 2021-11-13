@@ -9,7 +9,7 @@ def split_col(lst, index):
 
 if __name__ == '__main__':
     # Variables para el perceptron
-    learning_rate = 0.001
+    learning_rate = 0.1
     max_epochs = 50
 
     # Imprimimos el progreso para que se sepa que no quedo atascado...
@@ -36,33 +36,22 @@ if __name__ == '__main__':
         ytrain += [numpy.where(ytr == i, 1, -1)]
 
     print("Preprocessing done. Training...")
-    # Inicializamos y entrenamos los perceptrones
-    classifiers = []
-    for i in range(10):
-        print(f"Training Perceptron {i}")
-        classifiers += [adaline.Adaline(learning_rate, max_epochs)]
-        classifiers[i].fit(xtrain, ytrain[i])
+    # Inicializamos y entrenamos los adaline
+    classifier = adaline.Adaline(learning_rate, max_epochs, 10, print_progress=True)
+    classifier.fit_multi(xtrain, ytr)
 
     print("Done. Predicting...")
     # Pasamos los datos de prueba para obtener las predicciones y las comparamos
-    predictions = []
-    for i in range(10):
-        print(f"Predicting with Perceptron {i}")
-        predictions += [classifiers[i].predict(xtest)]
+    scores = []
+    for xi in xtest:
+        scores += [[classifier.net_input(xi, n) for n in range(10)]]
+    
+    predictions = [score.index(max(score)) for score in scores]
     
     # Calculamos la precision
-    # inconclusive indica que un digito clasifico como dos o mas a la vez
-    accuracy, inconclusive = 0, 0
-    results = []
-    for i in range(len(yts)):
-        # Creamos una tupla como pide el enunciado, pero esto no es necesario
-        results += [tuple([1 if l[i] == 1 else 0 for l in predictions])]
-        if sum(results[i]) == 1:
-            idx = results[i].index(1)
-            if idx == yts[i][0]:
-                accuracy += 1
-        else:
-            inconclusive += 1
+    accuracy = 0
+    for prediction, target in zip(predictions, yts):
+        if prediction == target: accuracy += 1
     
-    print(f"Inconclusive: {inconclusive}\nAccuracy: {accuracy}/{len(yts)} = {accuracy/len(yts)}")
+    print(f"Accuracy: {accuracy}/{len(yts)} = {accuracy/len(yts)}")
 
